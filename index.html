@@ -557,16 +557,25 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
       <div class="sec-label">Parámetros del evento</div>
       <div style="padding:0 20px">
         <div class="field">
-          <label>Tipo de evento</label>
-          <select id="c-tipo" onchange="calcular()">
-            <option value="3500000">Concierto / Show</option>
-            <option value="2500000">Feria / Exposición</option>
-            <option value="1800000">Congreso / Corporativo</option>
-            <option value="2200000">Boda / Evento social</option>
-            <option value="1200000">Torneo deportivo</option>
+          <label>Espacio / Salón</label>
+          <select id="c-tipo" onchange="onSalonChange()">
+            <option value="coliseo">Coliseo Gran Riviera</option>
+            <option value="pabellon">Pabellón San Carlos</option>
+            <option value="gotica">Salones Gótica</option>
+            <option value="santamarta">Salón Santa Marta</option>
+            <option value="fonda">Fonda Milagros</option>
+            <option value="banderas">Plazoleta de Banderas</option>
           </select>
         </div>
-        <div class="calc-row"><span class="calc-label">Días de evento</span><input class="calc-input" id="c-dias" type="number" value="1" min="1" max="10" oninput="calcular()"></div>
+        <div id="salon-info" style="background:var(--bg3);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:14px;color:var(--text2);line-height:1.6"></div>
+        <div class="field">
+          <label>Modalidad de renta</label>
+          <select id="c-modalidad" onchange="calcular()">
+            <option value="hora">Por hora</option>
+            <option value="dia">Por día</option>
+          </select>
+        </div>
+        <div class="calc-row"><span class="calc-label" id="lbl-unidades">Número de días</span><input class="calc-input" id="c-dias" type="number" value="1" min="1" max="30" oninput="calcular()"></div>
         <div class="calc-row"><span class="calc-label">Días de montaje previo</span><input class="calc-input" id="c-montaje" type="number" value="0" min="0" max="5" oninput="calcular()"></div>
         <div class="calc-row"><span class="calc-label">Sillas</span><input class="calc-input" id="c-sillas" type="number" value="0" min="0" oninput="calcular()"></div>
         <div class="calc-row"><span class="calc-label">Mesas</span><input class="calc-input" id="c-mesas" type="number" value="0" min="0" oninput="calcular()"></div>
@@ -852,89 +861,110 @@ function limpiarFicha() {
   document.querySelectorAll('#serv-group .toggle-chip').forEach(c => c.classList.remove('on'));
 }
 
+
 // ---- COTIZADOR ----
+var salones = {
+  coliseo:    { nombre: 'Coliseo Gran Riviera',   area: '1.815 m\u00b2', aforo: '7.262',   hora: 4500000,  dia: 22000000, minH: 4, feat: 'Camerinos VIP \u00b7 Acceso de carga \u00b7 Arena + 4 grader\u00edas' },
+  pabellon:   { nombre: 'Pabell\u00f3n San Carlos',    area: '20.000 m\u00b2', aforo: '5.000+', hora: 2800000,  dia: 14000000, minH: 4, feat: 'Puertas 6m alto \u00b7 Conexiones el\u00e9ctricas \u00b7 Bodega de carga' },
+  gotica:     { nombre: 'Salones G\u00f3tica',         area: '1.200 m\u00b2 c/u', aforo: '3.000', hora: 650000, dia: 3200000, minH: 3, feat: 'Divisibles en 2 secciones \u00b7 Equipo audiovisual \u00b7 Climatizaci\u00f3n' },
+  santamarta: { nombre: 'Sal\u00f3n Santa Marta',      area: '502 m\u00b2',   aforo: '800',    hora: 720000,   dia: 5760000,  minH: 4, feat: 'Decoraci\u00f3n personalizable \u00b7 Cocina equipada \u00b7 Acceso VIP' },
+  fonda:      { nombre: 'Fonda Milagros',         area: '600 m\u00b2',   aforo: '1.000',  hora: 380000,   dia: 1800000,  minH: 3, feat: 'Ambientaci\u00f3n t\u00edpica colombiana \u00b7 Pista de baile \u00b7 Barra de bebidas' },
+  banderas:   { nombre: 'Plazoleta de Banderas',  area: '2.637 m\u00b2', aforo: '4.742',  hora: 280000,   dia: 1200000,  minH: 3, feat: '\u00c1reas 2 y 3 separables \u00b7 Zona verde \u00b7 Carpa instalable' }
+};
+function onSalonChange() {
+  var key = document.getElementById('c-tipo').value;
+  var s = salones[key]; if (!s) return;
+  var mod = document.getElementById('c-modalidad').value;
+  var lblU = document.getElementById('lbl-unidades');
+  if (lblU) lblU.textContent = 'N\u00famero de ' + (mod==='hora'?'horas':'d\u00edas');
+  document.getElementById('salon-info').innerHTML =
+    '<strong style="color:var(--text);font-size:15px">' + s.nombre + '</strong><br>' +
+    '<span>' + s.area + ' &nbsp;&middot;&nbsp; Aforo: ' + s.aforo + ' pax &nbsp;&middot;&nbsp; M\u00edn. ' + s.minH + ' horas</span><br>' +
+    '<span style="font-size:13px;color:var(--text3)">' + s.feat + '</span>';
+  calcular();
+}
 function selPlan(pct, el) {
   document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('sel'));
-  el.classList.add('sel');
-  planDesc = pct;
-  planPct = pct === 15 ? 0.6 : 0.5;
-  calcular();
-  renderCondBox();
+  el.classList.add('sel'); planDesc = pct; planPct = pct===15?0.6:0.5; calcular(); renderCondBox();
 }
 function renderCondBox() {
   var c = document.getElementById('cond-box-container');
-  if (planDesc === 0) { c.innerHTML = ''; return; }
-  var cls = planDesc === 10 ? 'cond-10' : 'cond-15';
-  var color = planDesc === 10 ? 'var(--green)' : 'var(--purple)';
-  var conds = planDesc === 10 ? [
+  if (planDesc===0) { c.innerHTML=''; return; }
+  var cls = planDesc===10?'cond-10':'cond-15';
+  var conds = planDesc===10 ? [
     'Contrato firmado antes de la fecha del evento',
-    'Cliente acepta condiciones físicas actuales del recinto',
+    'Cliente acepta condiciones f\u00edsicas actuales del recinto',
     'El 50% del descuento se reinvierte en adecuaciones del recinto',
-    'Sin firma el contrato, la tarifa vuelve a ser la base',
-    'Anticipo mínimo del 40% al confirmar reserva'
+    'Sin firma del contrato, la tarifa vuelve a ser la base',
+    'Anticipo m\u00ednimo del 40% al confirmar reserva'
   ] : [
-    'Contrato firmado con mínimo 30 días de anticipación',
-    'Cliente acepta expresamente condiciones físicas y de infraestructura',
-    'El 60% del descuento se reinvierte en obras de adecuación del recinto',
+    'Contrato firmado con m\u00ednimo 30 d\u00edas de anticipaci\u00f3n',
+    'Cliente acepta expresamente condiciones f\u00edsicas y de infraestructura',
+    'El 60% del descuento se reinvierte en obras de adecuaci\u00f3n del recinto',
     'CENEXPO entrega informe de mejoras realizadas antes del evento',
     'Cliente renuncia a reclamaciones por el estado del inmueble aceptado',
     'Anticipo obligatorio del 50% al momento de la firma'
   ];
-  var html = '<div style="margin:0 20px 16px" class="cond-box ' + cls + '">';
-  html += '<div class="cond-title">Condiciones — Plan Mejora ' + planDesc + '</div>';
-  conds.forEach(function(co) { html += '<div class="cond-item"><span style="flex-shrink:0">·</span><span>' + co + '</span></div>'; });
-  html += '</div>';
-  c.innerHTML = html;
+  var html='<div style="margin:0 20px 16px" class="cond-box '+cls+'">';
+  html+='<div class="cond-title">Condiciones \u2014 Plan Mejora '+planDesc+'</div>';
+  conds.forEach(function(co){html+='<div class="cond-item"><span style="flex-shrink:0">\u00b7</span><span>'+co+'</span></div>';});
+  html+='</div>'; c.innerHTML=html;
 }
 function calcular() {
-  var base = parseInt(document.getElementById('c-tipo').value) || 0;
-  var dias = Math.max(1, parseInt(document.getElementById('c-dias').value) || 1);
-  var montaje = (parseInt(document.getElementById('c-montaje').value) || 0) * 600000;
-  var sillas = (parseInt(document.getElementById('c-sillas').value) || 0) * 2000;
-  var mesas = (parseInt(document.getElementById('c-mesas').value) || 0) * 15000;
-  var guardias = (parseInt(document.getElementById('c-guardias').value) || 0) * 80000 * dias;
-  var sub = base * dias + montaje + sillas + mesas + guardias;
-  var descVal = sub * (planDesc / 100);
-  var total = sub - descVal;
-  var antPct = planDesc === 15 ? 0.5 : 0.4;
-  var anticipo = total * antPct;
-  var reinv = descVal * planPct;
-
+  var key = document.getElementById('c-tipo').value;
+  var s = salones[key]; if (!s) return;
+  var mod = document.getElementById('c-modalidad').value;
+  var units = Math.max(1, parseInt(document.getElementById('c-dias').value)||1);
+  var lblU = document.getElementById('lbl-unidades');
+  if (lblU) lblU.textContent = 'N\u00famero de ' + (mod==='hora'?'horas':'d\u00edas');
+  var tarifa = mod==='hora' ? s.hora : s.dia;
+  var arriendo = tarifa * units;
+  var montaje = (parseInt(document.getElementById('c-montaje').value)||0)*600000;
+  var sillas = (parseInt(document.getElementById('c-sillas').value)||0)*2000;
+  var mesas = (parseInt(document.getElementById('c-mesas').value)||0)*15000;
+  var guardias = (parseInt(document.getElementById('c-guardias').value)||0)*80000*(mod==='dia'?units:1);
+  var sub = arriendo+montaje+sillas+mesas+guardias;
+  var descVal = sub*(planDesc/100);
+  var total = sub-descVal;
+  var antPct = planDesc===15?0.5:0.4;
+  var anticipo = total*antPct;
+  var reinv = descVal*planPct;
   document.getElementById('r-base').textContent = fmt(sub);
   document.getElementById('r-total').textContent = fmt(total);
-  document.getElementById('lbl-anticipo').textContent = 'Anticipo (' + Math.round(antPct * 100) + '%)';
+  document.getElementById('lbl-anticipo').textContent = 'Anticipo ('+Math.round(antPct*100)+'%)';
   document.getElementById('r-anticipo').textContent = fmt(anticipo);
-
   var rowDesc = document.getElementById('row-desc');
-  if (planDesc > 0) {
-    rowDesc.style.display = 'flex';
-    document.getElementById('lbl-desc').textContent = 'Descuento (' + planDesc + '%)';
-    document.getElementById('r-desc').textContent = '— ' + fmt(descVal);
-    document.getElementById('row-reinv').style.display = 'flex';
-    document.getElementById('lbl-reinv').textContent = 'Reinversión recinto (' + Math.round(planPct*100) + '%)';
-    document.getElementById('r-reinv').textContent = fmt(reinv);
-    document.getElementById('inv-detalle').style.display = 'block';
-    document.getElementById('inv-1').textContent = fmt(reinv * 0.35);
-    document.getElementById('inv-2').textContent = fmt(reinv * 0.25);
-    document.getElementById('inv-3').textContent = fmt(reinv * 0.25);
-    document.getElementById('inv-4').textContent = fmt(reinv * 0.15);
+  if (planDesc>0) {
+    rowDesc.style.display='flex';
+    document.getElementById('lbl-desc').textContent='Descuento ('+planDesc+'%)';
+    document.getElementById('r-desc').textContent='\u2014 '+fmt(descVal);
+    document.getElementById('row-reinv').style.display='flex';
+    document.getElementById('lbl-reinv').textContent='Reinversi\u00f3n recinto ('+Math.round(planPct*100)+'%)';
+    document.getElementById('r-reinv').textContent=fmt(reinv);
+    document.getElementById('inv-detalle').style.display='block';
+    document.getElementById('inv-1').textContent=fmt(reinv*0.35);
+    document.getElementById('inv-2').textContent=fmt(reinv*0.25);
+    document.getElementById('inv-3').textContent=fmt(reinv*0.25);
+    document.getElementById('inv-4').textContent=fmt(reinv*0.15);
   } else {
-    rowDesc.style.display = 'none';
-    document.getElementById('row-reinv').style.display = 'none';
-    document.getElementById('inv-detalle').style.display = 'none';
+    rowDesc.style.display='none';
+    document.getElementById('row-reinv').style.display='none';
+    document.getElementById('inv-detalle').style.display='none';
   }
 }
 function copiarCotiz() {
-  var tipo = document.getElementById('c-tipo');
-  var tipoNom = tipo.options[tipo.selectedIndex].text;
+  var key = document.getElementById('c-tipo').value;
+  var s = salones[key];
+  var mod = document.getElementById('c-modalidad').value;
+  var units = document.getElementById('c-dias').value;
   var total = document.getElementById('r-total').textContent;
   var anticipo = document.getElementById('r-anticipo').textContent;
   var base = document.getElementById('r-base').textContent;
-  var planNom = planDesc === 0 ? 'Sin descuento' : 'Plan Mejora ' + planDesc + ' (' + planDesc + '% dcto.)';
-  var reinvLine = planDesc > 0 ? '\nReinversión en adecuaciones: ' + document.getElementById('r-reinv').textContent : '';
-  var condLine = planDesc > 0 ? '\n\n⚠️ Descuento sujeto a contrato firmado donde el cliente acepta las condiciones físicas del recinto. Parte del descuento se reinvierte directamente en mejoras del espacio.' : '';
-  var txt = '📋 Cotización CENEXPO Armenia\n\nEvento: ' + tipoNom + '\nSubtotal base: ' + base + '\nPlan: ' + planNom + '\n\nTotal a pagar: ' + total + '\nAnticipo requerido: ' + anticipo + reinvLine + condLine + '\n\n📍 cenexpoarmenia.com\n📲 @cenexpoarmenia';
-  navigator.clipboard.writeText(txt).then(function() { toast('Cotización copiada ✓'); }).catch(function() { toast('No se pudo copiar'); });
+  var planNom = planDesc===0?'Sin descuento':'Plan Mejora '+planDesc+' ('+planDesc+'% dcto.)';
+  var reinvLine = planDesc>0?'\nReinversi\u00f3n en adecuaciones: '+document.getElementById('r-reinv').textContent:'';
+  var condLine = planDesc>0?'\n\nDescuento sujeto a contrato firmado. El cliente acepta las condiciones f\u00edsicas del recinto y parte del descuento se reinvierte en mejoras del espacio.':'';
+  var txt = 'Cotizaci\u00f3n CENEXPO Armenia\n\nEspacio: '+s.nombre+'\n\u00c1rea: '+s.area+' \u00b7 Aforo: '+s.aforo+' pax\n'+units+' '+(mod==='hora'?'hora(s)':'d\u00eda(s)')+'\n\nSubtotal: '+base+'\nPlan: '+planNom+'\nTotal a pagar: '+total+'\nAnticipo requerido: '+anticipo+reinvLine+condLine+'\n\nPrecios + IVA \u00b7 cenexpoarmenia.com \u00b7 @cenexpoarmenia';
+  navigator.clipboard.writeText(txt).then(function(){toast('Cotizaci\u00f3n copiada \u2713');}).catch(function(){toast('No se pudo copiar');});
 }
 
 // ---- MENSAJES ----
@@ -1034,7 +1064,7 @@ function borrarRegistro(id) {
 
 // Init
 renderCondBox();
-calcular();
+onSalonChange();
 
 // Service Worker
 if ('serviceWorker' in navigator) {
