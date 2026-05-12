@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CENEXPO">
+<title>CENEXPO Armenia — Ventas</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg2: #141414;
+  --bg3: #1c1c1c;
+  --bg4: #242424;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #f0ede6;
+  --text2: #9a9690;
+  --text3: #5c5a57;
+  --gold: #e8c97a;
+  --gold2: #c9a84c;
+  --gold-bg: rgba(232,201,122,0.08);
+  --gold-border: rgba(232,201,122,0.2);
+  --green: #6fcf97;
+  --green-bg: rgba(111,207,151,0.08);
+  --red: #eb5757;
+  --red-bg: rgba(235,87,87,0.08);
+  --blue: #7eb8f7;
+  --blue-bg: rgba(126,184,247,0.08);
+  --purple: #b99cf7;
+  --purple-bg: rgba(185,156,247,0.08);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.5; overflow: hidden; }
+
+/* Layout */
+.app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+.header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.header-logo { display: flex; align-items: center; gap: 10px; }
+.logo-mark {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: var(--gold); display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-weight: 800; font-size: 18px; color: #0a0a0a;
+}
+.logo-text { font-family: var(--font-head); font-weight: 700; font-size: 15px; letter-spacing: .02em; color: var(--text); }
+.logo-sub { font-size: 11px; color: var(--text3); font-weight: 300; }
+.header-date { font-size: 11px; color: var(--text3); text-align: right; }
+
+.content { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+.page { display: none; padding: 0 0 100px; animation: fadeIn .2s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Nav */
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  display: flex; padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 4px; cursor: pointer; border: none; background: none; color: var(--text3);
+  font-family: var(--font-body); font-size: 10px; font-weight: 400;
+  transition: color .15s;
+}
+.nav-item svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.nav-item.active { color: var(--gold); }
+.nav-item.active svg { stroke: var(--gold); }
+
+/* Section labels */
+.section-pad { padding: 20px 20px 0; }
+.sec-title { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.sec-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+.sec-label { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin: 20px 20px 10px; }
+
+/* Cards */
+.card {
+  margin: 0 20px 10px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+}
+.card-gold { border-color: var(--gold-border); background: linear-gradient(135deg, var(--bg2) 0%, rgba(232,201,122,0.04) 100%); }
+
+/* Flujo steps */
+.flow-step {
+  display: flex; gap: 12px; margin: 0 20px 2px; align-items: flex-start;
+}
+.step-connector { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.step-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg3); border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--gold);
+  flex-shrink: 0;
+}
+.step-line { width: 1px; height: 20px; background: var(--border); margin: 3px 0; }
+.step-body { flex: 1; padding: 4px 0 16px; }
+.step-name { font-family: var(--font-head); font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.step-script {
+  font-size: 13px; color: var(--text2); font-style: italic; line-height: 1.55;
+  background: var(--bg3); border-left: 2px solid var(--gold-border);
+  padding: 8px 12px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-bottom: 6px;
+}
+.step-tip {
+  font-size: 12px; color: var(--text3);
+  padding: 4px 8px; background: var(--bg3); border-radius: 6px;
+}
+
+/* Tags / pills */
+.tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
+.tag-gold { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-border); }
+.tag-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(111,207,151,.2); }
+.tag-red { background: var(--red-bg); color: var(--red); border: 1px solid rgba(235,87,87,.2); }
+.tag-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(126,184,247,.2); }
+.tag-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(185,156,247,.2); }
+.tag-gray { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+
+/* Event selector chips */
+.chip-row { display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 4px; scrollbar-width: none; }
+.chip-row::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0; padding: 7px 14px; border-radius: 20px;
+  border: 1px solid var(--border2); background: var(--bg2);
+  font-size: 13px; color: var(--text2); cursor: pointer;
+  font-family: var(--font-body); transition: all .15s;
+}
+.chip.active { background: var(--gold); color: #0a0a0a; border-color: var(--gold); font-weight: 500; }
+
+/* Forms */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
+.field input, .field select, .field textarea {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 10px 12px;
+  font-size: 14px; color: var(--text); font-family: var(--font-body);
+  outline: none; transition: border-color .15s; -webkit-appearance: none;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold-border); }
+.field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235c5a57' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+.field textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+.field input::placeholder, .field textarea::placeholder { color: var(--text3); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Toggle chips */
+.toggle-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.toggle-chip {
+  padding: 6px 12px; border-radius: 20px; font-size: 12px;
+  border: 1px solid var(--border2); color: var(--text2);
+  background: var(--bg3); cursor: pointer; transition: all .15s;
+}
+.toggle-chip.on { background: var(--gold-bg); color: var(--gold); border-color: var(--gold-border); }
+
+/* Status pills */
+.status-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.status-pill {
+  padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border2); color: var(--text2); cursor: pointer;
+  transition: all .15s; background: var(--bg3);
+}
+.status-pill.sel-nuevo { background: var(--blue-bg); color: var(--blue); border-color: rgba(126,184,247,.3); }
+.status-pill.sel-cotizado { background: var(--gold-bg); color: var(--gold); border-color: var(--gold-border); }
+.status-pill.sel-negociando { background: var(--purple-bg); color: var(--purple); border-color: rgba(185,156,247,.3); }
+.status-pill.sel-confirmado { background: var(--green-bg); color: var(--green); border-color: rgba(111,207,151,.3); }
+.status-pill.sel-perdido { background: var(--red-bg); color: var(--red); border-color: rgba(235,87,87,.3); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500;
+  cursor: pointer; border: none; font-family: var(--font-body); transition: all .15s;
+  -webkit-appearance: none;
+}
+.btn-gold { background: var(--gold); color: #0a0a0a; }
+.btn-gold:active { opacity: .85; transform: scale(.98); }
+.btn-outline { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+.btn-outline:active { background: var(--bg3); }
+.btn-block { width: 100%; }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Cotizador */
+.calc-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.calc-label { font-size: 13px; color: var(--text2); flex: 1; }
+.calc-input { width: 80px; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 14px; color: var(--text); font-family: var(--font-body); text-align: right; outline: none; }
+.calc-input:focus { border-color: var(--gold-border); }
+
+.total-block { background: var(--bg3); border-radius: var(--radius); padding: 16px; margin-top: 14px; border: 1px solid var(--border); }
+.total-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 5px 0; }
+.total-row .lbl { color: var(--text2); }
+.total-row .val { font-weight: 500; color: var(--text); }
+.total-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+.grand-row { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; }
+.grand-lbl { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--text); }
+.grand-val { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--gold); }
+.anticipo-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; }
+.anticipo-lbl { color: var(--text3); }
+.anticipo-val { color: var(--blue); font-weight: 500; }
+.reinv-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; }
+.reinv-lbl { color: var(--text3); }
+.reinv-val { color: var(--green); font-weight: 500; }
+
+/* Plan cards */
+.plan-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 0 20px 16px; }
+.plan-card {
+  border: 1px solid var(--border); background: var(--bg2);
+  border-radius: var(--radius); padding: 12px 10px;
+  cursor: pointer; transition: all .15s; text-align: center;
+}
+.plan-card.sel { border-color: var(--gold); background: var(--gold-bg); }
+.plan-pct { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: var(--text3); margin-bottom: 2px; }
+.plan-card.sel .plan-pct { color: var(--gold); }
+.plan-label { font-size: 10px; color: var(--text3); line-height: 1.3; }
+.plan-card.sel .plan-label { color: var(--gold2); }
+
+/* Conditions box */
+.cond-box { border-radius: var(--radius-sm); padding: 12px 14px; margin-top: 12px; font-size: 12px; line-height: 1.6; }
+.cond-10 { background: var(--green-bg); border: 1px solid rgba(111,207,151,.2); color: var(--green); }
+.cond-15 { background: var(--purple-bg); border: 1px solid rgba(185,156,247,.2); color: var(--purple); }
+.cond-title { font-weight: 600; font-size: 13px; margin-bottom: 8px; }
+.cond-item { padding: 3px 0; display: flex; gap: 6px; line-height: 1.4; }
+
+/* Mensajes */
+.msg-option {
+  margin: 0 20px 8px; padding: 14px 16px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); cursor: pointer; transition: all .15s;
+}
+.msg-option:active { background: var(--bg3); }
+.msg-option.sel { border-color: var(--gold-border); background: var(--gold-bg); }
+.msg-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.msg-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.msg-preview {
+  margin: 0 20px; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+  font-size: 13px; color: var(--text2); line-height: 1.65;
+  white-space: pre-wrap; min-height: 120px;
+}
+
+/* Records */
+.record-item {
+  margin: 0 20px 8px; padding: 14px 16px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); display: flex; align-items: center; gap: 12px;
+  cursor: pointer; transition: border-color .15s;
+}
+.record-item:active { border-color: var(--border2); }
+.rec-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--bg4); display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-size: 13px; font-weight: 700; color: var(--gold);
+  flex-shrink: 0;
+}
+.rec-info { flex: 1; min-width: 0; }
+.rec-name { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rec-detail { font-size: 11px; color: var(--text3); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rec-del { background: none; border: none; color: var(--text3); cursor: pointer; padding: 6px; font-size: 18px; flex-shrink: 0; }
+
+/* Seguimiento checklist */
+.check-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+.check-item:last-child { border-bottom: none; }
+.check-box-ui {
+  width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--border2);
+  background: var(--bg3); flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  margin-top: 1px; transition: all .15s;
+}
+.check-box-ui.done { background: var(--green); border-color: var(--green); }
+.check-box-ui.done::after { content: ''; display: block; width: 12px; height: 7px; border-left: 2px solid #0a0a0a; border-bottom: 2px solid #0a0a0a; transform: rotate(-45deg) translateY(-1px); }
+.check-label { font-size: 13px; color: var(--text2); line-height: 1.5; flex: 1; }
+.check-item.done-item .check-label { color: var(--text3); text-decoration: line-through; }
+.check-day { font-size: 11px; color: var(--gold); font-weight: 600; display: block; margin-bottom: 2px; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--bg4); border: 1px solid var(--border2); border-radius: 20px;
+  padding: 9px 18px; font-size: 13px; color: var(--text); z-index: 200;
+  opacity: 0; transition: all .25s; pointer-events: none; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Event detail block */
+.detail-block { margin: 0 20px; }
+.info-row-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.info-row-item:last-child { border-bottom: none; }
+.info-k { color: var(--text3); flex-shrink: 0; }
+.info-v { color: var(--text); font-weight: 500; text-align: right; }
+.q-item { display: flex; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2); line-height: 1.4; }
+.q-item:last-child { border-bottom: none; }
+.q-num { color: var(--gold); font-weight: 700; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+
+/* Empty state */
+.empty { text-align: center; padding: 48px 20px; color: var(--text3); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+.empty-text { font-size: 14px; }
+
+/* Install banner */
+.install-banner {
+  margin: 0 20px 16px; padding: 14px 16px;
+  background: var(--gold-bg); border: 1px solid var(--gold-border);
+  border-radius: var(--radius); display: flex; align-items: center; gap: 12px;
+}
+.install-icon { font-size: 24px; flex-shrink: 0; }
+.install-text { flex: 1; font-size: 12px; color: var(--gold2); line-height: 1.5; }
+.install-text strong { color: var(--gold); display: block; font-size: 13px; margin-bottom: 2px; }
+.install-close { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 18px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-mark">C</div>
+      <div>
+        <div class="logo-text">CENEXPO</div>
+        <div class="logo-sub">Armenia · Sistema de ventas</div>
+      </div>
+    </div>
+    <div class="header-date" id="header-date"></div>
+  </header>
+
+  <div class="content" id="content">
+
+    <!-- PAGE: FLUJO -->
+    <div class="page active" id="page-flujo">
+      <div class="section-pad">
+        <div class="sec-title">Flujo de atención</div>
+        <div class="sec-sub">Guión paso a paso para toda llamada entrante</div>
+      </div>
+
+      <div id="install-banner" class="install-banner" style="display:none">
+        <span class="install-icon">📲</span>
+        <div class="install-text"><strong>Instalar como app</strong>Toca "Compartir" → "Agregar a inicio" para usar sin internet</div>
+        <button class="install-close" onclick="document.getElementById('install-banner').style.display='none'">×</button>
+      </div>
+
+      <div class="flow-step">
+        <div class="step-connector"><div class="step-circle">1</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-name">Contestar y presentarse</div>
+          <div class="step-script">"Buenas [días/tardes], habla con [nombre] del Centro de Exposiciones Armenia, ¿en qué le puedo ayudar?"</div>
+          <div class="step-tip">Contestar antes del tercer timbre. Tono cálido y seguro.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-connector"><div class="step-circle">2</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-name">Identificar el tipo de evento</div>
+          <div class="step-script">"Con mucho gusto. ¿Me puede contar un poco sobre el evento que tiene en mente?"</div>
+          <div class="step-tip">Escuchar sin interrumpir. Anotar: tipo, fecha tentativa, número de personas.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-connector"><div class="step-circle">3</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-name">Calificar disponibilidad</div>
+          <div class="step-script">"¿Ya tiene una fecha en mente? ¿Cuántas personas aproximadamente esperan?"</div>
+          <div class="step-tip">Si la fecha no está disponible, ofrecer 2 alternativas de inmediato. Nunca decir solo "no está disponible".</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-connector"><div class="step-circle">4</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-name">Presentar el espacio con confianza</div>
+          <div class="step-script">"Contamos con un espacio amplio y personalizable, con acceso vehicular, parqueo y la posibilidad de adecuar completamente la ambientación según su evento."</div>
+          <div class="step-tip">Mencionar siempre 2–3 ventajas concretas. Enfocarse en el potencial, no en limitaciones.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-connector"><div class="step-circle">5</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-name">Capturar datos de contacto</div>
+          <div class="step-script">"Para enviarle la cotización, ¿me regala su nombre completo y su WhatsApp o correo?"</div>
+          <div class="step-tip">Registrar en la ficha: nombre, empresa, tipo evento, fecha, aforo, canal de contacto.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-connector"><div class="step-circle">6</div></div>
+        <div class="step-body">
+          <div class="step-name">Cerrar con siguiente paso claro</div>
+          <div class="step-script">"Perfecto [nombre], le envío la propuesta hoy antes de las [hora]. ¿Le parece bien que la revisemos mañana a [hora]?"</div>
+          <div class="step-tip">Comprometerse siempre con hora específica. Agendar el follow-up en el momento.</div>
+        </div>
+      </div>
+
+      <div class="sec-label">Consejo de oro</div>
+      <div class="card card-gold">
+        <div style="font-size:13px;color:var(--gold2);line-height:1.6">La <strong style="color:var(--gold)">visita al recinto</strong> es tu herramienta de cierre más poderosa. El espacio convence mucho más en persona que en foto. Siempre invitar a conocerlo antes de negociar.</div>
+      </div>
+    </div>
+
+    <!-- PAGE: EVENTOS -->
+    <div class="page" id="page-eventos">
+      <div class="section-pad">
+        <div class="sec-title">Por tipo de evento</div>
+        <div class="sec-sub">Preguntas clave y datos por categoría</div>
+      </div>
+      <div class="chip-row" id="event-chips">
+        <div class="chip active" onclick="selEvt('concierto',this)">🎤 Concierto</div>
+        <div class="chip" onclick="selEvt('feria',this)">🏪 Feria / Expo</div>
+        <div class="chip" onclick="selEvt('corporativo',this)">🏢 Corporativo</div>
+        <div class="chip" onclick="selEvt('social',this)">🎉 Social / Boda</div>
+        <div class="chip" onclick="selEvt('deportivo',this)">🏆 Deportivo</div>
+      </div>
+
+      <div id="evt-detail"></div>
+    </div>
+
+    <!-- PAGE: FICHA -->
+    <div class="page" id="page-ficha">
+      <div class="section-pad">
+        <div class="sec-title">Ficha de cliente</div>
+        <div class="sec-sub">Registra cada prospecto durante o después del contacto</div>
+      </div>
+
+      <div class="sec-label">Estado del prospecto</div>
+      <div style="padding:0 20px">
+        <div class="status-row" id="status-row">
+          <span class="status-pill sel-nuevo" onclick="setStatus('nuevo',this)">Nuevo</span>
+          <span class="status-pill" onclick="setStatus('cotizado',this)">Cotizado</span>
+          <span class="status-pill" onclick="setStatus('negociando',this)">Negociando</span>
+          <span class="status-pill" onclick="setStatus('confirmado',this)">Confirmado</span>
+          <span class="status-pill" onclick="setStatus('perdido',this)">Perdido</span>
+        </div>
+      </div>
+
+      <div class="sec-label">Datos del contacto</div>
+      <div style="padding:0 20px">
+        <div class="field-row">
+          <div class="field"><label>Nombre</label><input id="f-nombre" type="text" placeholder="Nombre y apellido"></div>
+          <div class="field"><label>Empresa</label><input id="f-empresa" type="text" placeholder="Opcional"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Teléfono / WA</label><input id="f-tel" type="tel" placeholder="+57 300 000 0000"></div>
+          <div class="field"><label>Correo</label><input id="f-email" type="email" placeholder="correo@ejemplo.com"></div>
+        </div>
+        <div class="field">
+          <label>Canal de contacto</label>
+          <div class="toggle-group" id="canal-group">
+            <span class="toggle-chip on" onclick="toggleOne(this,'canal-group')">Llamada</span>
+            <span class="toggle-chip" onclick="toggleOne(this,'canal-group')">WhatsApp</span>
+            <span class="toggle-chip" onclick="toggleOne(this,'canal-group')">Instagram</span>
+            <span class="toggle-chip" onclick="toggleOne(this,'canal-group')">Referido</span>
+            <span class="toggle-chip" onclick="toggleOne(this,'canal-group')">Web</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-label">Datos del evento</div>
+      <div style="padding:0 20px">
+        <div class="field">
+          <label>Tipo de evento</label>
+          <select id="f-tipo">
+            <option value="">Seleccionar...</option>
+            <option>Concierto / Show artístico</option>
+            <option>Feria / Exposición</option>
+            <option>Congreso / Corporativo</option>
+            <option>Lanzamiento de producto</option>
+            <option>Boda / Quinceaños</option>
+            <option>Grado / Celebración social</option>
+            <option>Torneo deportivo</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Fecha tentativa</label><input id="f-fecha" type="date"></div>
+          <div class="field"><label>Asistentes aprox.</label><input id="f-aforo" type="number" placeholder="ej. 500"></div>
+        </div>
+        <div class="field">
+          <label>Duración</label>
+          <select id="f-dur">
+            <option value="">Seleccionar...</option>
+            <option>Medio día (4–6 h)</option>
+            <option>Día completo (6–12 h)</option>
+            <option>2 días</option>
+            <option>3 días o más</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Servicios requeridos</label>
+          <div class="toggle-group" id="serv-group">
+            <span class="toggle-chip" onclick="this.classList.toggle('on')">Sonido / AV</span>
+            <span class="toggle-chip" onclick="this.classList.toggle('on')">Iluminación</span>
+            <span class="toggle-chip" onclick="this.classList.toggle('on')">Tarima</span>
+            <span class="toggle-chip" onclick="this.classList.toggle('on')">Sillas y mesas</span>
+            <span class="toggle-chip" onclick="this.classList.toggle('on')">Carpas</span>
+            <span class="toggle-chip" onclick="this.classList.toggle('on')">Seguridad</span>
+            <span class="toggle-chip" onclick="this.classList.toggle('on')">Parqueo extra</span>
+            <span class="toggle-chip" onclick="this.classList.toggle('on')">Catering</span>
+            <span class="toggle-chip" onclick="this.classList.toggle('on')">Decoración</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-label">Seguimiento</div>
+      <div style="padding:0 20px">
+        <div class="field"><label>Notas de la llamada</label><textarea id="f-notas" placeholder="¿Qué dijo el cliente? ¿Detalles especiales?"></textarea></div>
+        <div class="field-row">
+          <div class="field">
+            <label>Cotización</label>
+            <select id="f-cotiz">
+              <option>No enviada</option>
+              <option>Enviada por WA</option>
+              <option>Enviada por correo</option>
+            </select>
+          </div>
+          <div class="field"><label>Próximo seguimiento</label><input id="f-followup" type="date"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-gold" style="flex:1" onclick="guardar()">Guardar registro</button>
+          <button class="btn btn-outline btn-sm" onclick="limpiarFicha()">Limpiar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: COTIZADOR -->
+    <div class="page" id="page-cotiz">
+      <div class="section-pad">
+        <div class="sec-title">Cotizador</div>
+        <div class="sec-sub">Calcula y genera el resumen en segundos</div>
+      </div>
+
+      <div class="sec-label">Plan de descuento</div>
+      <div class="plan-grid">
+        <div class="plan-card" onclick="selPlan(0,this)">
+          <div class="plan-pct">0%</div>
+          <div class="plan-label">Tarifa base</div>
+        </div>
+        <div class="plan-card sel" onclick="selPlan(10,this)">
+          <div class="plan-pct">10%</div>
+          <div class="plan-label">Plan Mejora 10</div>
+        </div>
+        <div class="plan-card" onclick="selPlan(15,this)">
+          <div class="plan-pct">15%</div>
+          <div class="plan-label">Plan Mejora 15</div>
+        </div>
+      </div>
+
+      <div id="cond-box-container"></div>
+
+      <div class="sec-label">Parámetros del evento</div>
+      <div style="padding:0 20px">
+        <div class="field">
+          <label>Tipo de evento</label>
+          <select id="c-tipo" onchange="calcular()">
+            <option value="3500000">Concierto / Show</option>
+            <option value="2500000">Feria / Exposición</option>
+            <option value="1800000">Congreso / Corporativo</option>
+            <option value="2200000">Boda / Evento social</option>
+            <option value="1200000">Torneo deportivo</option>
+          </select>
+        </div>
+        <div class="calc-row"><span class="calc-label">Días de evento</span><input class="calc-input" id="c-dias" type="number" value="1" min="1" max="10" oninput="calcular()"></div>
+        <div class="calc-row"><span class="calc-label">Días de montaje previo</span><input class="calc-input" id="c-montaje" type="number" value="0" min="0" max="5" oninput="calcular()"></div>
+        <div class="calc-row"><span class="calc-label">Sillas</span><input class="calc-input" id="c-sillas" type="number" value="0" min="0" oninput="calcular()"></div>
+        <div class="calc-row"><span class="calc-label">Mesas</span><input class="calc-input" id="c-mesas" type="number" value="0" min="0" oninput="calcular()"></div>
+        <div class="calc-row"><span class="calc-label">Guardias de seguridad</span><input class="calc-input" id="c-guardias" type="number" value="0" min="0" oninput="calcular()"></div>
+
+        <div class="total-block">
+          <div class="total-row"><span class="lbl">Subtotal base</span><span class="val" id="r-base">$0</span></div>
+          <div class="total-row" id="row-desc" style="display:none"><span class="lbl" id="lbl-desc">Descuento</span><span class="val" style="color:var(--red)" id="r-desc">— $0</span></div>
+          <hr class="total-divider">
+          <div class="grand-row"><span class="grand-lbl">Total a pagar</span><span class="grand-val" id="r-total">$0</span></div>
+          <div class="anticipo-row"><span class="anticipo-lbl" id="lbl-anticipo">Anticipo (40%)</span><span class="anticipo-val" id="r-anticipo">$0</span></div>
+          <div class="reinv-row" id="row-reinv" style="display:none"><span class="reinv-lbl" id="lbl-reinv">Reinversión recinto</span><span class="reinv-val" id="r-reinv">$0</span></div>
+        </div>
+
+        <div id="inv-detalle" style="display:none;margin-top:10px">
+          <div class="card" style="margin:0">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Distribución de la reinversión</div>
+            <div class="total-row"><span class="lbl">Limpieza y pintura (35%)</span><span class="val" id="inv-1">$0</span></div>
+            <div class="total-row"><span class="lbl">Adecuación de baños (25%)</span><span class="val" id="inv-2">$0</span></div>
+            <div class="total-row"><span class="lbl">Señalización y maquillaje (25%)</span><span class="val" id="inv-3">$0</span></div>
+            <div class="total-row"><span class="lbl">Reparaciones urgentes (15%)</span><span class="val" id="inv-4">$0</span></div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-gold" style="flex:1" onclick="copiarCotiz()">Copiar para WhatsApp</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: MENSAJES -->
+    <div class="page" id="page-mensajes">
+      <div class="section-pad">
+        <div class="sec-title">Mensajes tipo</div>
+        <div class="sec-sub">Toca un mensaje para ver y copiar</div>
+      </div>
+
+      <div id="msg-list"></div>
+
+      <div class="sec-label">Vista previa</div>
+      <div class="msg-preview" id="msg-preview">Selecciona un mensaje arriba para ver la plantilla.</div>
+      <div style="padding:0 20px;margin-top:10px">
+        <button class="btn btn-gold btn-block" onclick="copiarMsg()">Copiar mensaje</button>
+      </div>
+    </div>
+
+    <!-- PAGE: SEGUIMIENTO -->
+    <div class="page" id="page-seg">
+      <div class="section-pad">
+        <div class="sec-title">Seguimiento</div>
+        <div class="sec-sub">Protocolo y registros guardados</div>
+      </div>
+
+      <div class="sec-label">Protocolo día a día</div>
+      <div style="padding:0 20px">
+        <div id="checklist"></div>
+      </div>
+
+      <div class="sec-label">Registros guardados</div>
+      <div id="records-list"></div>
+    </div>
+
+  </div><!-- end content -->
+
+  <nav class="nav">
+    <button class="nav-item active" onclick="goPage('flujo',this)">
+      <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      Flujo
+    </button>
+    <button class="nav-item" onclick="goPage('eventos',this)">
+      <svg viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      Eventos
+    </button>
+    <button class="nav-item" onclick="goPage('ficha',this)">
+      <svg viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      Ficha
+    </button>
+    <button class="nav-item" onclick="goPage('cotiz',this)">
+      <svg viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+      Cotizar
+    </button>
+    <button class="nav-item" onclick="goPage('mensajes',this)">
+      <svg viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+      Mensajes
+    </button>
+    <button class="nav-item" onclick="goPage('seg',this)">
+      <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+      Seguim.
+    </button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// State
+var estado = 'nuevo';
+var registros = JSON.parse(localStorage.getItem('cenexpo_registros') || '[]');
+var planDesc = 10;
+var planPct = 0.5;
+var selectedMsg = null;
+
+// Date header
+var d = new Date();
+document.getElementById('header-date').innerHTML = d.toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'}).replace(/\b\w/g,c=>c.toUpperCase());
+
+// Install banner
+if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !window.navigator.standalone) {
+  document.getElementById('install-banner').style.display = 'flex';
+}
+
+// Navigation
+function goPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('content').scrollTop = 0;
+  if (id === 'eventos') renderEvtDetail('concierto');
+  if (id === 'mensajes') renderMsgs();
+  if (id === 'seg') { renderChecklist(); renderRecords(); }
+  if (id === 'cotiz') calcular();
+}
+
+// Toast
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// Format currency
+function fmt(n) { return '$' + Math.round(n).toLocaleString('es-CO'); }
+
+// ---- EVENTOS ----
+var evtData = {
+  concierto: {
+    name: 'Concierto / Show artístico',
+    info: [
+      ['Aforo sugerido', '500 a 5.000 personas'],
+      ['Tiempo de montaje', '1–2 días antes del evento'],
+      ['Servicios disponibles', 'Energía trifásica, camerinos, zonas VIP'],
+      ['Tarifa base', 'Desde $3.500.000 / día']
+    ],
+    preguntas: [
+      '¿Es evento propio o trabajas con un productor externo?',
+      '¿Qué producción técnica requiere (tarima, sonido, luces)?',
+      '¿Necesitan cerramiento perimetral o parqueo adicional?',
+      '¿El evento es con boletería o libre?',
+      '¿Requieren servicios de logística (sillas, carpas, stands)?'
+    ]
+  },
+  feria: {
+    name: 'Feria / Exposición / Rueda de negocios',
+    info: [
+      ['Número de stands típico', '20 a 200 stands'],
+      ['Modalidad', 'Espacio bruto o llave en mano'],
+      ['Servicios', 'Tomas eléctricas, internet, señalización'],
+      ['Duración habitual', '2 a 5 días'],
+      ['Tarifa base', 'Desde $2.500.000 / día']
+    ],
+    preguntas: [
+      '¿Cuántos expositores / empresas participan?',
+      '¿Se incluye zona de conferencias o auditorio?',
+      '¿Requieren montaje de stands o solo espacio limpio?',
+      '¿Esperan visitantes del público general o es B2B?',
+      '¿Han organizado esta feria antes? ¿En qué recinto?'
+    ]
+  },
+  corporativo: {
+    name: 'Congreso / Corporativo / Lanzamiento',
+    info: [
+      ['Aforo sugerido', '50 a 1.000 personas'],
+      ['Servicios valorados', 'AV, pantallas, internet, catering'],
+      ['Duración habitual', 'Medio día a 3 días'],
+      ['Tipo de cliente', 'Empresas, gremios, gobierno'],
+      ['Tarifa base', 'Desde $1.800.000 / día']
+    ],
+    preguntas: [
+      '¿Qué tipo de evento es: congreso, lanzamiento, capacitación, asamblea?',
+      '¿Requieren sala de prensa o zona VIP separada?',
+      '¿Necesitan servicio de catering dentro del recinto?',
+      '¿Manejan imagen corporativa para la ambientación?',
+      '¿Tienen organizador externo o manejan todo internamente?'
+    ]
+  },
+  social: {
+    name: 'Boda / Quinceaños / Grado / Evento social',
+    info: [
+      ['Aforo sugerido', '100 a 600 personas'],
+      ['Servicios valorados', 'Decoración, cocina, parqueo, seguridad'],
+      ['Duración habitual', '6 a 12 horas (o toda la noche)'],
+      ['Hora adicional', '$150.000'],
+      ['Tarifa base', 'Desde $2.200.000 / evento']
+    ],
+    preguntas: [
+      '¿Qué tipo de celebración es y cuántos invitados esperan?',
+      '¿Tienen decorador propio o buscan proveedores aliados?',
+      '¿Requieren cocina habilitada o zona de catering externo?',
+      '¿El evento termina pasada la medianoche?',
+      '¿Les gustaría agendar una visita al espacio esta semana?'
+    ]
+  },
+  deportivo: {
+    name: 'Torneo deportivo / Liga / Competencia',
+    info: [
+      ['Tipo de espacios', 'Canchas, zonas de calentamiento'],
+      ['Servicios', 'Camerinos, graderías, señalización'],
+      ['Duración habitual', '1 a varios días de torneo'],
+      ['Tarifa base', 'Desde $1.200.000 / día']
+    ],
+    preguntas: [
+      '¿Qué deporte o disciplina? ¿Cuántas categorías participan?',
+      '¿Requieren graderías o el público es limitado?',
+      '¿Tienen convenio con alguna federación o liga?',
+      '¿El evento tiene transmisión o cobertura de medios?',
+      '¿Necesitan zona de alimentación para deportistas?'
+    ]
+  }
+};
+
+function selEvt(type, chip) {
+  document.querySelectorAll('#event-chips .chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  renderEvtDetail(type);
+}
+
+function renderEvtDetail(type) {
+  var d = evtData[type];
+  if (!d) return;
+  var html = '<div class="detail-block">';
+  html += '<div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--text);margin-bottom:14px;padding:0">' + d.name + '</div>';
+  d.info.forEach(function(r) {
+    html += '<div class="info-row-item"><span class="info-k">' + r[0] + '</span><span class="info-v">' + r[1] + '</span></div>';
+  });
+  html += '</div>';
+  html += '<div class="sec-label" style="margin-top:16px">Preguntas clave para hacer al cliente</div>';
+  html += '<div class="detail-block">';
+  d.preguntas.forEach(function(q, i) {
+    html += '<div class="q-item"><span class="q-num">' + (i+1) + '</span><span>' + q + '</span></div>';
+  });
+  html += '</div><div style="height:20px"></div>';
+  document.getElementById('evt-detail').innerHTML = html;
+}
+
+// ---- FICHA ----
+function setStatus(st, el) {
+  document.querySelectorAll('#status-row .status-pill').forEach(p => { p.className = 'status-pill'; });
+  el.classList.add('sel-' + st);
+  estado = st;
+}
+function toggleOne(el, grpId) {
+  document.querySelectorAll('#' + grpId + ' .toggle-chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+function guardar() {
+  var nom = document.getElementById('f-nombre').value.trim();
+  if (!nom) { toast('Ingresa el nombre del cliente'); return; }
+  var canal = '';
+  document.querySelectorAll('#canal-group .toggle-chip.on').forEach(c => canal = c.textContent);
+  var servs = [];
+  document.querySelectorAll('#serv-group .toggle-chip.on').forEach(c => servs.push(c.textContent));
+  var reg = {
+    id: Date.now(),
+    nombre: nom, empresa: document.getElementById('f-empresa').value,
+    tel: document.getElementById('f-tel').value, email: document.getElementById('f-email').value,
+    canal: canal, tipo: document.getElementById('f-tipo').value,
+    fecha: document.getElementById('f-fecha').value, aforo: document.getElementById('f-aforo').value,
+    dur: document.getElementById('f-dur').value, servicios: servs,
+    notas: document.getElementById('f-notas').value,
+    cotizacion: document.getElementById('f-cotiz').value,
+    followup: document.getElementById('f-followup').value,
+    estado: estado, creado: new Date().toLocaleDateString('es-CO')
+  };
+  registros.unshift(reg);
+  localStorage.setItem('cenexpo_registros', JSON.stringify(registros));
+  toast('Registro guardado ✓');
+  limpiarFicha();
+}
+function limpiarFicha() {
+  ['f-nombre','f-empresa','f-tel','f-email','f-tipo','f-fecha','f-aforo','f-dur','f-notas','f-followup'].forEach(id => { var el = document.getElementById(id); if (el) el.value = ''; });
+  document.querySelectorAll('#serv-group .toggle-chip').forEach(c => c.classList.remove('on'));
+}
+
+// ---- COTIZADOR ----
+function selPlan(pct, el) {
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  planDesc = pct;
+  planPct = pct === 15 ? 0.6 : 0.5;
+  calcular();
+  renderCondBox();
+}
+function renderCondBox() {
+  var c = document.getElementById('cond-box-container');
+  if (planDesc === 0) { c.innerHTML = ''; return; }
+  var cls = planDesc === 10 ? 'cond-10' : 'cond-15';
+  var color = planDesc === 10 ? 'var(--green)' : 'var(--purple)';
+  var conds = planDesc === 10 ? [
+    'Contrato firmado antes de la fecha del evento',
+    'Cliente acepta condiciones físicas actuales del recinto',
+    'El 50% del descuento se reinvierte en adecuaciones del recinto',
+    'Sin firma el contrato, la tarifa vuelve a ser la base',
+    'Anticipo mínimo del 40% al confirmar reserva'
+  ] : [
+    'Contrato firmado con mínimo 30 días de anticipación',
+    'Cliente acepta expresamente condiciones físicas y de infraestructura',
+    'El 60% del descuento se reinvierte en obras de adecuación del recinto',
+    'CENEXPO entrega informe de mejoras realizadas antes del evento',
+    'Cliente renuncia a reclamaciones por el estado del inmueble aceptado',
+    'Anticipo obligatorio del 50% al momento de la firma'
+  ];
+  var html = '<div style="margin:0 20px 16px" class="cond-box ' + cls + '">';
+  html += '<div class="cond-title">Condiciones — Plan Mejora ' + planDesc + '</div>';
+  conds.forEach(function(co) { html += '<div class="cond-item"><span style="flex-shrink:0">·</span><span>' + co + '</span></div>'; });
+  html += '</div>';
+  c.innerHTML = html;
+}
+function calcular() {
+  var base = parseInt(document.getElementById('c-tipo').value) || 0;
+  var dias = Math.max(1, parseInt(document.getElementById('c-dias').value) || 1);
+  var montaje = (parseInt(document.getElementById('c-montaje').value) || 0) * 600000;
+  var sillas = (parseInt(document.getElementById('c-sillas').value) || 0) * 2000;
+  var mesas = (parseInt(document.getElementById('c-mesas').value) || 0) * 15000;
+  var guardias = (parseInt(document.getElementById('c-guardias').value) || 0) * 80000 * dias;
+  var sub = base * dias + montaje + sillas + mesas + guardias;
+  var descVal = sub * (planDesc / 100);
+  var total = sub - descVal;
+  var antPct = planDesc === 15 ? 0.5 : 0.4;
+  var anticipo = total * antPct;
+  var reinv = descVal * planPct;
+
+  document.getElementById('r-base').textContent = fmt(sub);
+  document.getElementById('r-total').textContent = fmt(total);
+  document.getElementById('lbl-anticipo').textContent = 'Anticipo (' + Math.round(antPct * 100) + '%)';
+  document.getElementById('r-anticipo').textContent = fmt(anticipo);
+
+  var rowDesc = document.getElementById('row-desc');
+  if (planDesc > 0) {
+    rowDesc.style.display = 'flex';
+    document.getElementById('lbl-desc').textContent = 'Descuento (' + planDesc + '%)';
+    document.getElementById('r-desc').textContent = '— ' + fmt(descVal);
+    document.getElementById('row-reinv').style.display = 'flex';
+    document.getElementById('lbl-reinv').textContent = 'Reinversión recinto (' + Math.round(planPct*100) + '%)';
+    document.getElementById('r-reinv').textContent = fmt(reinv);
+    document.getElementById('inv-detalle').style.display = 'block';
+    document.getElementById('inv-1').textContent = fmt(reinv * 0.35);
+    document.getElementById('inv-2').textContent = fmt(reinv * 0.25);
+    document.getElementById('inv-3').textContent = fmt(reinv * 0.25);
+    document.getElementById('inv-4').textContent = fmt(reinv * 0.15);
+  } else {
+    rowDesc.style.display = 'none';
+    document.getElementById('row-reinv').style.display = 'none';
+    document.getElementById('inv-detalle').style.display = 'none';
+  }
+}
+function copiarCotiz() {
+  var tipo = document.getElementById('c-tipo');
+  var tipoNom = tipo.options[tipo.selectedIndex].text;
+  var total = document.getElementById('r-total').textContent;
+  var anticipo = document.getElementById('r-anticipo').textContent;
+  var base = document.getElementById('r-base').textContent;
+  var planNom = planDesc === 0 ? 'Sin descuento' : 'Plan Mejora ' + planDesc + ' (' + planDesc + '% dcto.)';
+  var reinvLine = planDesc > 0 ? '\nReinversión en adecuaciones: ' + document.getElementById('r-reinv').textContent : '';
+  var condLine = planDesc > 0 ? '\n\n⚠️ Descuento sujeto a contrato firmado donde el cliente acepta las condiciones físicas del recinto. Parte del descuento se reinvierte directamente en mejoras del espacio.' : '';
+  var txt = '📋 Cotización CENEXPO Armenia\n\nEvento: ' + tipoNom + '\nSubtotal base: ' + base + '\nPlan: ' + planNom + '\n\nTotal a pagar: ' + total + '\nAnticipo requerido: ' + anticipo + reinvLine + condLine + '\n\n📍 cenexpoarmenia.com\n📲 @cenexpoarmenia';
+  navigator.clipboard.writeText(txt).then(function() { toast('Cotización copiada ✓'); }).catch(function() { toast('No se pudo copiar'); });
+}
+
+// ---- MENSAJES ----
+var mensajes = [
+  { id: 'bienvenida', nombre: 'Primer contacto / Bienvenida', desc: 'Para responder la primera llamada o mensaje', texto: 'Hola [Nombre] 👋, gracias por comunicarse con el Centro de Exposiciones Armenia.\n\nCon mucho gusto le acompañamos en la organización de su evento. Para enviarle la información y cotización adecuada, ¿me puede compartir:\n\n📅 Fecha tentativa del evento\n👥 Número aproximado de asistentes\n🎉 Tipo de evento\n\nEstamos aquí para ayudarle. ¡Será un placer recibirlos en CENEXPO!' },
+  { id: 'cotizacion', nombre: 'Envío de cotización', desc: 'Después de calcular el total en el cotizador', texto: 'Hola [Nombre], buen día 🙂\n\nLe comparto nuestra propuesta para [tipo de evento] el [fecha]:\n\n✅ Espacio: [descripción breve]\n✅ Capacidad: [aforo]\n✅ Incluye: [servicios]\n💰 Total: [valor]\n\nQuedamos atentos a sus preguntas. ¿Le gustaría agendar una visita al recinto esta semana para conocerlo en persona?' },
+  { id: 'visita', nombre: 'Invitación a visitar el recinto', desc: 'Para convertir el interés en cierre', texto: 'Hola [Nombre] 😊\n\nQueremos invitarle a conocer el Centro de Exposiciones Armenia en persona. Al ver el espacio va a tener una imagen mucho más clara de todo lo que podemos ofrecerle.\n\n¿Le queda bien esta semana? Podemos recibirle [Día] o [Día] en el horario que prefiera.\n\nLa visita no toma más de 30 minutos y no tiene ningún costo. ¡Le esperamos!' },
+  { id: 'descuento', nombre: 'Presentar Plan Mejora (descuento)', desc: 'Para ofrecer el 10% o 15% con condiciones', texto: 'Hola [Nombre],\n\nTenemos para usted una propuesta especial: el *Plan Mejora [10/15]*, que le da un [10/15]% de descuento sobre la tarifa al firmar el contrato.\n\n¿Cómo funciona?\nUsted acepta las condiciones actuales del recinto y parte del descuento se reinvierte directamente en mejoras del espacio antes de su evento. Usted paga menos y su evento queda en un recinto mejorado.\n\n¿Le interesa que le explique los detalles?' },
+  { id: 'seguimiento', nombre: 'Seguimiento (sin respuesta)', desc: 'Día 3 después de enviar la cotización', texto: 'Hola [Nombre], ¿cómo está?\n\nHace unos días le enviamos la propuesta para su evento en CENEXPO y quería saber si tuvo la oportunidad de revisarla.\n\n¿Tiene alguna duda o desea ajustar algo? Con gusto la adaptamos.\n\nSeguimos a su disposición 🙂' },
+  { id: 'confirmacion', nombre: 'Confirmación de reserva', desc: 'Cuando el cliente dice sí', texto: '¡Hola [Nombre]! 🎉\n\nNos da mucho gusto confirmarle que su evento queda reservado en CENEXPO Armenia:\n\n📅 Fecha: [fecha]\n🕐 Horario: [horario]\n👥 Aforo: [número]\n\nEn los próximos días le enviaremos el contrato y los detalles del anticipo para formalizar.\n\n¡Muchas gracias por confiar en CENEXPO! Va a ser un evento increíble.' },
+  { id: 'instagram', nombre: 'Respuesta a DM de Instagram', desc: 'Cuando escriben por @cenexpoarmenia', texto: '¡Hola! Gracias por escribirnos 😊 En CENEXPO Armenia tenemos el espacio perfecto para tu evento.\n\nPara enviarte toda la información y una cotización personalizada, cuéntanos:\n→ ¿Qué tipo de evento tienes en mente?\n→ ¿Para qué fecha aproximadamente?\n→ ¿Cuántas personas esperan?\n\nTambién puedes escribirnos por WhatsApp al [número] para atenderte más rápido 📲' }
+];
+
+function renderMsgs() {
+  var html = '';
+  mensajes.forEach(function(m) {
+    html += '<div class="msg-option" id="mo-' + m.id + '" onclick="selMsg(\'' + m.id + '\')">';
+    html += '<div class="msg-name">' + m.nombre + '</div>';
+    html += '<div class="msg-desc">' + m.desc + '</div>';
+    html += '</div>';
+  });
+  document.getElementById('msg-list').innerHTML = html;
+  selMsg('bienvenida');
+}
+function selMsg(id) {
+  document.querySelectorAll('.msg-option').forEach(m => m.classList.remove('sel'));
+  var el = document.getElementById('mo-' + id);
+  if (el) el.classList.add('sel');
+  var m = mensajes.find(x => x.id === id);
+  document.getElementById('msg-preview').textContent = m ? m.texto : '';
+  selectedMsg = m;
+}
+function copiarMsg() {
+  if (!selectedMsg) { toast('Selecciona un mensaje primero'); return; }
+  navigator.clipboard.writeText(selectedMsg.texto).then(function() { toast('Mensaje copiado ✓'); }).catch(function() { toast('No se pudo copiar'); });
+}
+
+// ---- SEGUIMIENTO ----
+var checklistData = [
+  { dia: 'Día 0', texto: 'Enviar cotización por WhatsApp máximo 2 horas después del primer contacto' },
+  { dia: 'Día 1', texto: 'Confirmar que recibió la propuesta y preguntar si tiene dudas' },
+  { dia: 'Día 3', texto: 'Si no hay respuesta, enviar seguimiento con ventaja adicional o presentar Plan Mejora' },
+  { dia: 'Día 5', texto: 'Llamada telefónica directa — no solo WhatsApp' },
+  { dia: 'Día 7', texto: 'Ofrecer visita guiada al recinto. El espacio convence más en persona.' },
+  { dia: 'Día 14', texto: 'Preguntar si la fecha sigue vigente y ofrecer bloqueo por 48h más' },
+  { dia: 'Cierre', texto: 'Enviar contrato, recibir anticipo del 40–50% y confirmar en agenda' }
+];
+var checkStates = JSON.parse(localStorage.getItem('cenexpo_checks') || '{}');
+
+function renderChecklist() {
+  var html = '';
+  checklistData.forEach(function(item, i) {
+    var done = checkStates[i] ? true : false;
+    html += '<div class="check-item' + (done ? ' done-item' : '') + '" onclick="toggleCheck(' + i + ',this)">';
+    html += '<div class="check-box-ui' + (done ? ' done' : '') + '"></div>';
+    html += '<div class="check-label"><span class="check-day">' + item.dia + '</span>' + item.texto + '</div>';
+    html += '</div>';
+  });
+  document.getElementById('checklist').innerHTML = html;
+}
+function toggleCheck(i, row) {
+  checkStates[i] = !checkStates[i];
+  localStorage.setItem('cenexpo_checks', JSON.stringify(checkStates));
+  row.querySelector('.check-box-ui').classList.toggle('done');
+  row.classList.toggle('done-item');
+}
+
+function renderRecords() {
+  var el = document.getElementById('records-list');
+  if (!registros.length) {
+    el.innerHTML = '<div class="empty"><span class="empty-icon">📋</span><div class="empty-text">Aún no hay registros guardados.<br>Usa la ficha para registrar clientes.</div></div>';
+    return;
+  }
+  var statusColors = { nuevo: 'tag-blue', cotizado: 'tag-gold', negociando: 'tag-purple', confirmado: 'tag-green', perdido: 'tag-red' };
+  var statusNames = { nuevo: 'Nuevo', cotizado: 'Cotizado', negociando: 'Negociando', confirmado: 'Confirmado', perdido: 'Perdido' };
+  var html = '';
+  registros.forEach(function(r) {
+    var initials = r.nombre.split(' ').slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase();
+    html += '<div class="record-item">';
+    html += '<div class="rec-avatar">' + initials + '</div>';
+    html += '<div class="rec-info">';
+    html += '<div class="rec-name">' + r.nombre + (r.empresa ? ' — ' + r.empresa : '') + '</div>';
+    html += '<div class="rec-detail">' + (r.tipo || 'Evento sin especificar') + (r.aforo ? ' · ' + r.aforo + ' pax' : '') + (r.fecha ? ' · ' + r.fecha : '') + '</div>';
+    html += '<span class="tag ' + (statusColors[r.estado] || 'tag-gray') + '" style="margin-top:5px">' + (statusNames[r.estado] || r.estado) + '</span>';
+    html += '</div>';
+    html += '<button class="rec-del" onclick="event.stopPropagation();borrarRegistro(' + r.id + ')">×</button>';
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+function borrarRegistro(id) {
+  registros = registros.filter(function(r){ return r.id !== id; });
+  localStorage.setItem('cenexpo_registros', JSON.stringify(registros));
+  renderRecords();
+  toast('Registro eliminado');
+}
+
+// Init
+renderCondBox();
+calcular();
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>
