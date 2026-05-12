@@ -674,6 +674,56 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 // State
 var estado = 'nuevo';
 var registros = JSON.parse(localStorage.getItem('cenexpo_registros') || '[]');
+var SCRIPT_URL = 'https://script.google.com/a/macros/grupocasgosas.com/s/AKfycbyy-MSK-CwmxJkT1Fn5aYjg3odvK_mZuf8QiJRkmIdyZeS-j8HvhDtrEH7oi1sDWsTB/exec';
+var vendorName = localStorage.getItem('cenexpo_vendedor') || '';
+
+// DB Functions
+function dbSave(reg) {
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(Object.assign({action:'save'}, reg, {vendedor: vendorName}))
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.success) toast('Guardado en Drive ✓');
+    else toast('Error al guardar en Drive');
+  }).catch(function(){ toast('Sin conexion - guardado local'); });
+}
+
+function dbGetAll(cb) {
+  fetch(SCRIPT_URL + '?t=' + Date.now())
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.success && d.data) {
+        var recs = d.data.map(function(r){
+          return {
+            id: r.ID, nombre: r.Nombre, empresa: r.Empresa, tel: r.Telefono,
+            email: r.Email, canal: r.Canal, tipo: r.TipoEvento,
+            fecha: r.FechaEvento, aforo: r.Aforo, dur: r.Duracion,
+            servicios: r.Servicios ? r.Servicios.split(', ') : [],
+            estado: r.Estado, notas: r.Notas, cotizacion: r.Cotizacion,
+            followup: r.Followup, creado: r.Fecha, vendedor: r.Vendedor
+          };
+        });
+        cb(recs);
+      }
+    }).catch(function(){ cb(null); });
+}
+
+function dbDelete(id) {
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action:'delete', id: id})
+  }).catch(function(){});
+}
+
+function dbUpdateEstado(id, estado) {
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action:'updateEstado', id: id, estado: estado})
+  }).catch(function(){});
+}
 var planDesc = 10;
 var planPct = 0.5;
 var selectedMsg = null;
@@ -853,7 +903,8 @@ function guardar() {
   };
   registros.unshift(reg);
   localStorage.setItem('cenexpo_registros', JSON.stringify(registros));
-  toast('Registro guardado ✓');
+  dbSave(reg);
+  toast('Guardando...');
   limpiarFicha();
 }
 function limpiarFicha() {
@@ -1058,6 +1109,7 @@ function renderRecords() {
 function borrarRegistro(id) {
   registros = registros.filter(function(r){ return r.id !== id; });
   localStorage.setItem('cenexpo_registros', JSON.stringify(registros));
+  dbDelete(id);
   renderRecords();
   toast('Registro eliminado');
 }
